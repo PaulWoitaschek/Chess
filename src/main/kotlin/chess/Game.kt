@@ -60,13 +60,26 @@ class Game {
           ).filter(::isValidMove)
         }
         piece.isQueen -> validRookMoves(coordinate)
-
+        piece.isBishop -> validBishopMoves(coordinate)
         else -> {
           listOf(Coordinate(row = coordinate.row - 1, column = coordinate.column))
         }
       }
     }
   }
+
+  private fun validBishopMoves(coordinate: Coordinate): List<Coordinate> {
+    val coordinateManipulations: List<(Coordinate) -> Coordinate> = listOf(
+      { it.plus(1, 1) },
+      { it.plus(1, -1) },
+      { it.plus(-1, 1) },
+      { it.plus(-1, -1) },
+    )
+    return coordinateManipulations.flatMap {
+      generateSequence(coordinate, it).drop(1).takeWhile(::isValidMove)
+    }
+  }
+
 
   private fun validRookMoves(coordinate: Coordinate): List<Coordinate> {
     val coordinateManipulations: List<(Coordinate) -> Coordinate> = listOf(
