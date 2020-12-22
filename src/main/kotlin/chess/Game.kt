@@ -54,6 +54,18 @@ class Game {
             coordinate.plus(-1, -2),
           ).filter(validMove)
         }
+        piece.isKing -> {
+          listOf(
+            coordinate.plus(1, -1),
+            coordinate.plus(1, 0),
+            coordinate.plus(1, 1),
+            coordinate.plus(0, -1),
+            coordinate.plus(0, 1),
+            coordinate.plus(-1, -1),
+            coordinate.plus(-1, 0),
+            coordinate.plus(-1, 1),
+          ).filter(validMove)
+        }
         else -> {
           listOf(Coordinate(row = coordinate.row - 1, column = coordinate.column))
         }

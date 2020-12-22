@@ -3,12 +3,13 @@ package chess
 enum class Piece(
   val path: String,
   val isRook: Boolean = false,
-  val isKnight: Boolean = false
+  val isKnight: Boolean = false,
+  val isKing: Boolean = false
 ) {
   BlackBishop("bishop_black.xml"),
   WhiteBishop("bishop_white.xml"),
-  BlackKing("king_black.xml"),
-  WhiteKing("king_white.xml"),
+  BlackKing("king_black.xml", isKing = true),
+  WhiteKing("king_white.xml", isKing = true),
   BlackKnight("knight_black.xml", isKnight = true),
   WhiteKnight("knight_white.xml", isKnight = true),
   BlackPawn("pawn_black.xml"),
