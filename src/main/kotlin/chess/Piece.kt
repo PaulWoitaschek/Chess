@@ -1,6 +1,6 @@
 package chess
 
-enum class Piece(val path: String) {
+enum class Piece(val path: String, val isRook: Boolean = false) {
   BlackBishop("bishop_black.xml"),
   WhiteBishop("bishop_white.xml"),
   BlackKing("king_black.xml"),
@@ -11,6 +11,6 @@ enum class Piece(val path: String) {
   WhitePawn("pawn_white.xml"),
   BlackQueen("queen_black.xml"),
   WhiteQueen("queen_white.xml"),
-  BlackRook("rook_black.xml"),
-  WhiteRook("rook_white.xml"),
+  BlackRook("rook_black.xml", isRook = true),
+  WhiteRook("rook_white.xml", isRook = true),
 }

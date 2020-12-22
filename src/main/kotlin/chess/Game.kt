@@ -20,12 +20,33 @@ class Game {
     _validMoves.value = validMoves(coordinate)
   }
 
+  private fun piece(coordinate: Coordinate): Piece? {
+    return board.value[coordinate.row][coordinate.column]
+  }
+
   private fun validMoves(coordinate: Coordinate): List<Coordinate> {
-    val piece = board.value[coordinate.row][coordinate.column]
+    val piece = piece(coordinate)
     return if (piece == null) {
       emptyList()
     } else {
-      listOf(Coordinate(row = coordinate.row - 1, column = coordinate.column))
+      if (piece.isRook) {
+        val validMove: (Coordinate) -> Boolean = { it.isValid && piece(it) == null }
+        val positiveRowMoves = generateSequence(coordinate) {
+          it.plusRows(1)
+        }.drop(1).takeWhile(validMove)
+        val negativeRowMoves = generateSequence(coordinate) {
+          it.minusRows(1)
+        }.drop(1).takeWhile(validMove)
+        val positiveColumnMoves = generateSequence(coordinate) {
+          it.minusColumns(1)
+        }.drop(1).takeWhile(validMove)
+        val negativeColumnMoves = generateSequence(coordinate) {
+          it.plusColumns(1)
+        }.drop(1).takeWhile(validMove)
+        (positiveRowMoves + negativeRowMoves + positiveColumnMoves + negativeColumnMoves).toList()
+      } else {
+        listOf(Coordinate(row = coordinate.row - 1, column = coordinate.column))
+      }
     }
   }
 
