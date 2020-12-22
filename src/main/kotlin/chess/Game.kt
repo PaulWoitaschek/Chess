@@ -24,24 +24,17 @@ class Game {
     return board.value[coordinate.row][coordinate.column]
   }
 
+  private fun isValidMove(to: Coordinate): Boolean {
+    return to.isValid && piece(to) == null
+  }
+
   private fun validMoves(coordinate: Coordinate): List<Coordinate> {
     val piece = piece(coordinate)
     return if (piece == null) {
       emptyList()
     } else {
-      val validMove: (Coordinate) -> Boolean = { it.isValid && piece(it) == null }
       when {
-        piece.isRook -> {
-          val coordinateManipulations: List<(Coordinate) -> Coordinate> = listOf(
-            { it.plusRows(1) },
-            { it.minusRows(1) },
-            { it.plusColumns(1) },
-            { it.minusColumns(1) },
-          )
-          coordinateManipulations.flatMap {
-            generateSequence(coordinate, it).drop(1).takeWhile(validMove)
-          }
-        }
+        piece.isRook -> validRookMoves(coordinate)
         piece.isKnight -> {
           listOf(
             coordinate.plus(2, 1),
@@ -52,7 +45,7 @@ class Game {
             coordinate.plus(1, -2),
             coordinate.plus(-1, 2),
             coordinate.plus(-1, -2),
-          ).filter(validMove)
+          ).filter(::isValidMove)
         }
         piece.isKing -> {
           listOf(
@@ -64,12 +57,26 @@ class Game {
             coordinate.plus(-1, -1),
             coordinate.plus(-1, 0),
             coordinate.plus(-1, 1),
-          ).filter(validMove)
+          ).filter(::isValidMove)
         }
+        piece.isQueen -> validRookMoves(coordinate)
+
         else -> {
           listOf(Coordinate(row = coordinate.row - 1, column = coordinate.column))
         }
       }
+    }
+  }
+
+  private fun validRookMoves(coordinate: Coordinate): List<Coordinate> {
+    val coordinateManipulations: List<(Coordinate) -> Coordinate> = listOf(
+      { it.plusRows(1) },
+      { it.minusRows(1) },
+      { it.plusColumns(1) },
+      { it.minusColumns(1) },
+    )
+    return coordinateManipulations.flatMap {
+      generateSequence(coordinate, it).drop(1).takeWhile(::isValidMove)
     }
   }
 
