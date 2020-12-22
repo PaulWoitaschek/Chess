@@ -32,19 +32,15 @@ class Game {
       val validMove: (Coordinate) -> Boolean = { it.isValid && piece(it) == null }
       when {
         piece.isRook -> {
-          val positiveRowMoves = generateSequence(coordinate) {
-            it.plusRows(1)
-          }.drop(1).takeWhile(validMove)
-          val negativeRowMoves = generateSequence(coordinate) {
-            it.minusRows(1)
-          }.drop(1).takeWhile(validMove)
-          val positiveColumnMoves = generateSequence(coordinate) {
-            it.minusColumns(1)
-          }.drop(1).takeWhile(validMove)
-          val negativeColumnMoves = generateSequence(coordinate) {
-            it.plusColumns(1)
-          }.drop(1).takeWhile(validMove)
-          (positiveRowMoves + negativeRowMoves + positiveColumnMoves + negativeColumnMoves).toList()
+          val coordinateManipulations: List<(Coordinate) -> Coordinate> = listOf(
+            { it.plusRows(1) },
+            { it.minusRows(1) },
+            { it.plusColumns(1) },
+            { it.minusColumns(1) },
+          )
+          coordinateManipulations.flatMap {
+            generateSequence(coordinate, it).drop(1).takeWhile(validMove)
+          }
         }
         piece.isKnight -> {
           listOf(
