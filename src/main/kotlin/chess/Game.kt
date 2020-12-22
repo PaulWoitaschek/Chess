@@ -35,38 +35,37 @@ class Game {
     } else {
       when {
         piece.isRook -> validRookMoves(coordinate)
-        piece.isKnight -> {
-          listOf(
-            coordinate.plus(2, 1),
-            coordinate.plus(2, -1),
-            coordinate.plus(-2, 1),
-            coordinate.plus(-2, -1),
-            coordinate.plus(1, 2),
-            coordinate.plus(1, -2),
-            coordinate.plus(-1, 2),
-            coordinate.plus(-1, -2),
-          ).filter(::isValidMove)
-        }
-        piece.isKing -> {
-          listOf(
-            coordinate.plus(1, -1),
-            coordinate.plus(1, 0),
-            coordinate.plus(1, 1),
-            coordinate.plus(0, -1),
-            coordinate.plus(0, 1),
-            coordinate.plus(-1, -1),
-            coordinate.plus(-1, 0),
-            coordinate.plus(-1, 1),
-          ).filter(::isValidMove)
-        }
+        piece.isKnight -> validKnightMoves(coordinate)
+        piece.isKing -> validKingMoves(coordinate)
         piece.isQueen -> validRookMoves(coordinate) + validBishopMoves(coordinate)
         piece.isBishop -> validBishopMoves(coordinate)
-        else -> {
-          listOf(Coordinate(row = coordinate.row - 1, column = coordinate.column))
-        }
+        piece.isPawn -> listOf(coordinate.minusRows(1)).filter(::isValidMove)
+        else -> error("Unhandled piece=$piece")
       }
     }
   }
+
+  private fun validKnightMoves(coordinate: Coordinate) = listOf(
+    coordinate.plus(2, 1),
+    coordinate.plus(2, -1),
+    coordinate.plus(-2, 1),
+    coordinate.plus(-2, -1),
+    coordinate.plus(1, 2),
+    coordinate.plus(1, -2),
+    coordinate.plus(-1, 2),
+    coordinate.plus(-1, -2),
+  ).filter(::isValidMove)
+
+  private fun validKingMoves(coordinate: Coordinate) = listOf(
+    coordinate.plus(1, -1),
+    coordinate.plus(1, 0),
+    coordinate.plus(1, 1),
+    coordinate.plus(0, -1),
+    coordinate.plus(0, 1),
+    coordinate.plus(-1, -1),
+    coordinate.plus(-1, 0),
+    coordinate.plus(-1, 1),
+  ).filter(::isValidMove)
 
   private fun validBishopMoves(coordinate: Coordinate): List<Coordinate> {
     val coordinateManipulations: List<(Coordinate) -> Coordinate> = listOf(

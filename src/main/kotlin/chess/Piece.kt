@@ -6,7 +6,8 @@ enum class Piece(
   val isKnight: Boolean = false,
   val isKing: Boolean = false,
   val isQueen: Boolean = false,
-  val isBishop: Boolean = false
+  val isBishop: Boolean = false,
+  val isPawn: Boolean = false
 ) {
   BlackBishop("bishop_black.xml", isBishop = true),
   WhiteBishop("bishop_white.xml", isBishop = true),
@@ -14,8 +15,8 @@ enum class Piece(
   WhiteKing("king_white.xml", isKing = true),
   BlackKnight("knight_black.xml", isKnight = true),
   WhiteKnight("knight_white.xml", isKnight = true),
-  BlackPawn("pawn_black.xml"),
-  WhitePawn("pawn_white.xml"),
+  BlackPawn("pawn_black.xml", isPawn = true),
+  WhitePawn("pawn_white.xml", isPawn = true),
   BlackQueen("queen_black.xml", isQueen = true),
   WhiteQueen("queen_white.xml", isQueen = true),
   BlackRook("rook_black.xml", isRook = true),
