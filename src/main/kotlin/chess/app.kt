@@ -3,6 +3,7 @@ package chess
 import androidx.compose.desktop.Window
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -21,11 +22,11 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 
+val game = Game()
+val itemSize = 120.dp
 
 fun main() {
-  val itemSize = 120.dp
   Window(title = "Compose for Desktop", size = IntSize(1200, 1200)) {
-    val game = Game()
     MaterialTheme {
       Column {
         Button(onClick = {
@@ -37,26 +38,17 @@ fun main() {
           val evenRow = rowIndex % 2 == 0
           Row {
             column.forEachIndexed { columnIndex, chessPiece ->
+              val coordinate = Coordinate(row = rowIndex, column = columnIndex)
               val evenColumn = columnIndex % 2 == 0
               val blackField = (evenRow && !evenColumn) || (evenColumn && !evenRow)
               val color = if (blackField) Color(0xFF616161) else Color(0xffbdbdbd)
+              val strokeColor = if (coordinate in game.validMoves.value) Color(0xff66bb6a) else Color.Transparent
               Box(Modifier.width(itemSize)
                 .background(color = color)
                 .height(itemSize)
-              ) {
+                .border(width = 6.dp, color = strokeColor)) {
                 if (chessPiece != null) {
-                  ChessPieceImage(chessPiece) { offset ->
-                    val moveX = (offset.x.dp / itemSize)
-                      .roundToInt()
-                    val moveY = (offset.y.dp / itemSize)
-                      .roundToInt()
-                    game.move(
-                      fromColumn = columnIndex,
-                      fromRow = rowIndex,
-                      toColumn = columnIndex + moveX,
-                      toRow = rowIndex + moveY
-                    )
-                  }
+                  ChessPieceImage(type = chessPiece, coordinate)
                 }
               }
             }
@@ -71,13 +63,14 @@ fun main() {
 @Composable
 fun BoxScope.ChessPieceImage(
   type: Piece,
-  modifier: Modifier = Modifier,
-  onPieceMoved: (offset: Offset) -> Unit
+  coordinate: Coordinate,
+  modifier: Modifier = Modifier
 ) {
   val offset = mutableStateOf(Offset.Zero)
   val dragObserver = object : DragObserver {
     override fun onStart(downPosition: Offset) {
       offset.value = downPosition
+      game.startMove(coordinate)
     }
 
     override fun onDrag(dragDistance: Offset): Offset {
@@ -86,7 +79,15 @@ fun BoxScope.ChessPieceImage(
     }
 
     override fun onStop(velocity: Offset) {
-      onPieceMoved(offset.value)
+      game.stopMove()
+      val moveX = (offset.value.x.dp / itemSize)
+        .roundToInt()
+      val moveY = (offset.value.y.dp / itemSize)
+        .roundToInt()
+      game.move(
+        coordinate,
+        Coordinate(row = coordinate.row + moveY, column = coordinate.column + moveX)
+      )
       offset.value = Offset.Zero
     }
   }
