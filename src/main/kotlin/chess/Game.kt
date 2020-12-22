@@ -59,7 +59,7 @@ class Game {
             coordinate.plus(-1, 1),
           ).filter(::isValidMove)
         }
-        piece.isQueen -> validRookMoves(coordinate)
+        piece.isQueen -> validRookMoves(coordinate) + validBishopMoves(coordinate)
         piece.isBishop -> validBishopMoves(coordinate)
         else -> {
           listOf(Coordinate(row = coordinate.row - 1, column = coordinate.column))
