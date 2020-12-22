@@ -29,23 +29,38 @@ class Game {
     return if (piece == null) {
       emptyList()
     } else {
-      if (piece.isRook) {
-        val validMove: (Coordinate) -> Boolean = { it.isValid && piece(it) == null }
-        val positiveRowMoves = generateSequence(coordinate) {
-          it.plusRows(1)
-        }.drop(1).takeWhile(validMove)
-        val negativeRowMoves = generateSequence(coordinate) {
-          it.minusRows(1)
-        }.drop(1).takeWhile(validMove)
-        val positiveColumnMoves = generateSequence(coordinate) {
-          it.minusColumns(1)
-        }.drop(1).takeWhile(validMove)
-        val negativeColumnMoves = generateSequence(coordinate) {
-          it.plusColumns(1)
-        }.drop(1).takeWhile(validMove)
-        (positiveRowMoves + negativeRowMoves + positiveColumnMoves + negativeColumnMoves).toList()
-      } else {
-        listOf(Coordinate(row = coordinate.row - 1, column = coordinate.column))
+      val validMove: (Coordinate) -> Boolean = { it.isValid && piece(it) == null }
+      when {
+        piece.isRook -> {
+          val positiveRowMoves = generateSequence(coordinate) {
+            it.plusRows(1)
+          }.drop(1).takeWhile(validMove)
+          val negativeRowMoves = generateSequence(coordinate) {
+            it.minusRows(1)
+          }.drop(1).takeWhile(validMove)
+          val positiveColumnMoves = generateSequence(coordinate) {
+            it.minusColumns(1)
+          }.drop(1).takeWhile(validMove)
+          val negativeColumnMoves = generateSequence(coordinate) {
+            it.plusColumns(1)
+          }.drop(1).takeWhile(validMove)
+          (positiveRowMoves + negativeRowMoves + positiveColumnMoves + negativeColumnMoves).toList()
+        }
+        piece.isKnight -> {
+          listOf(
+            coordinate.plus(2, 1),
+            coordinate.plus(2, -1),
+            coordinate.plus(-2, 1),
+            coordinate.plus(-2, -1),
+            coordinate.plus(1, 2),
+            coordinate.plus(1, -2),
+            coordinate.plus(-1, 2),
+            coordinate.plus(-1, -2),
+          ).filter(validMove)
+        }
+        else -> {
+          listOf(Coordinate(row = coordinate.row - 1, column = coordinate.column))
+        }
       }
     }
   }

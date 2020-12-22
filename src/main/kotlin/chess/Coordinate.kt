@@ -10,5 +10,7 @@ data class Coordinate(val row: Int, val column: Int) {
 
   fun minusRows(value: Int): Coordinate = plusRows(-value)
 
+  fun plus(rows: Int, columns: Int): Coordinate = copy(row = row + rows, column = column + columns)
+
   val isValid: Boolean = row in 0..7 && column in 0..7
 }
