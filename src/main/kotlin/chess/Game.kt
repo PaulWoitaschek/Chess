@@ -8,6 +8,7 @@ class Game {
 
   private val _board: MutableState<Board> = mutableStateOf(Board())
   val board: State<Board> get() = _board
+  private val whiteOnBottom = true
 
   private val _validMoves: MutableState<List<Coordinate>> = mutableStateOf(emptyList())
   val validMoves: State<List<Coordinate>> get() = _validMoves
@@ -39,8 +40,24 @@ class Game {
         piece.isKing -> validKingMoves(coordinate)
         piece.isQueen -> validRookMoves(coordinate) + validBishopMoves(coordinate)
         piece.isBishop -> validBishopMoves(coordinate)
-        piece.isPawn -> listOf(coordinate.minusRows(1)).filter(::isValidMove)
+        piece.isPawn -> validPawnMoves(coordinate, isWhitePiece = piece.isWhite)
         else -> error("Unhandled piece=$piece")
+      }
+    }
+  }
+
+  private fun validPawnMoves(coordinate: Coordinate, isWhitePiece: Boolean): List<Coordinate> {
+    return if (isWhitePiece) {
+      if (whiteOnBottom) {
+        listOf(coordinate.minusRows(1)).filter(::isValidMove)
+      } else {
+        listOf(coordinate.plusRows(1)).filter(::isValidMove)
+      }
+    } else {
+      if (whiteOnBottom) {
+        listOf(coordinate.plusRows(1)).filter(::isValidMove)
+      } else {
+        listOf(coordinate.minusRows(1)).filter(::isValidMove)
       }
     }
   }
