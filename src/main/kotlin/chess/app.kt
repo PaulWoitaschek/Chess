@@ -30,9 +30,14 @@ fun main() {
     MaterialTheme {
       Column {
         Button(onClick = {
-          game.reset()
+          game.restartGame(whiteOnBottom = true)
         }) {
-          Text("Restart")
+          Text("Restart, Play white")
+        }
+        Button(onClick = {
+          game.restartGame(whiteOnBottom = false)
+        }) {
+          Text("Restart, Play black")
         }
         game.board.value.forEachIndexed { rowIndex, column ->
           val evenRow = rowIndex % 2 == 0

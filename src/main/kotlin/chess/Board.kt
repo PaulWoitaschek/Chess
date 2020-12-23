@@ -2,8 +2,8 @@ package chess
 
 typealias Board = List<List<Piece?>>
 
-fun Board(): Board {
-  return List(8) { column ->
+fun Board(whiteOnBottom: Boolean): Board {
+  val whiteBoard = List(8) { column ->
     List(8) { row ->
       when (column) {
         0 -> when (row) {
@@ -39,5 +39,11 @@ fun Board(): Board {
         }
       }
     }
+  }
+
+  return if (whiteOnBottom) {
+    whiteBoard
+  } else {
+    whiteBoard.reversed()
   }
 }

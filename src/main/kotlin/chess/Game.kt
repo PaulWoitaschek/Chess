@@ -6,15 +6,16 @@ import androidx.compose.runtime.mutableStateOf
 
 class Game {
 
-  private val _board: MutableState<Board> = mutableStateOf(Board())
   val board: State<Board> get() = _board
-  private val whiteOnBottom = true
+  private var whiteOnBottom = true
+  private val _board: MutableState<Board> = mutableStateOf(Board(whiteOnBottom = whiteOnBottom))
 
   private val _validMoves: MutableState<List<Coordinate>> = mutableStateOf(emptyList())
   val validMoves: State<List<Coordinate>> get() = _validMoves
 
-  fun reset() {
-    _board.value = Board()
+  fun restartGame(whiteOnBottom: Boolean) {
+    this.whiteOnBottom = whiteOnBottom
+    _board.value = Board(whiteOnBottom = whiteOnBottom)
   }
 
   fun startMove(coordinate: Coordinate) {
