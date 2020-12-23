@@ -8,6 +8,7 @@ class Game {
 
   val board: State<Board> get() = _board
   private var whiteOnBottom = true
+  private var whiteTurn = true
   private val _board: MutableState<Board> = mutableStateOf(Board(whiteOnBottom = whiteOnBottom))
 
   private val _validMoves: MutableState<List<Coordinate>> = mutableStateOf(emptyList())
@@ -35,6 +36,9 @@ class Game {
     return if (piece == null) {
       emptyList()
     } else {
+      if ((piece.isWhite && !whiteTurn) || (!piece.isWhite && whiteTurn)) {
+        return emptyList()
+      }
       when {
         piece.isRook -> validRookMoves(coordinate)
         piece.isKnight -> validKnightMoves(coordinate)
@@ -97,7 +101,6 @@ class Game {
     }
   }
 
-
   private fun validRookMoves(coordinate: Coordinate): List<Coordinate> {
     val coordinateManipulations: List<(Coordinate) -> Coordinate> = listOf(
       { it.plusRows(1) },
@@ -126,5 +129,6 @@ class Game {
       mutableBoard[to.row][to.column] = removed
     }
     _board.value = mutableBoard
+    whiteTurn = !whiteTurn
   }
 }
