@@ -19,7 +19,7 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "Main"
+        mainClass = "chess.AppKt"
     }
 }
 

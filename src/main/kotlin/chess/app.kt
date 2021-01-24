@@ -20,7 +20,6 @@ import androidx.compose.ui.res.vectorXmlResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.toOffset
 import kotlin.math.roundToInt
 
 val game = Game()
@@ -45,22 +44,23 @@ fun main() {
             game.board.value.forEachIndexed { rowIndex, column ->
               val evenRow = rowIndex % 2 == 0
               Row {
-                column.forEachIndexed { columnIndex, chessPiece ->
+                column.forEachIndexed { columnIndex, _ ->
                   val coordinate = Coordinate(row = rowIndex, column = columnIndex)
                   val evenColumn = columnIndex % 2 == 0
                   val blackField = (evenRow && !evenColumn) || (evenColumn && !evenRow)
                   val color = if (blackField) Color(0xFF616161) else Color(0xffbdbdbd)
                   val strokeColor = if (coordinate in game.validMoves.value) Color(0xff66bb6a) else Color.Transparent
-                  Box(Modifier.width(itemSize)
-                    .background(color = color)
-                    .height(itemSize)
-                    .border(width = 6.dp, color = strokeColor))
+                  Box(
+                    Modifier.width(itemSize)
+                      .background(color = color)
+                      .height(itemSize)
+                      .border(width = 6.dp, color = strokeColor)
+                  )
                 }
               }
             }
           }
           game.board.value.forEachIndexed { rowIndex, column ->
-            val evenRow = rowIndex % 2 == 0
             column.forEachIndexed { columnIndex, chessPiece ->
               val coordinate = Coordinate(row = rowIndex, column = columnIndex)
               if (chessPiece != null) {
